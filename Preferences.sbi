@@ -1,0 +1,301 @@
+﻿DeclareModule Preferences
+  
+  EnableExplicit
+  
+  Declare   ClosePreferences()
+  Declare   CreatePreferences(Filename.s, Flags = 0)
+  Declare   ExaminePreferenceGroups()
+  Declare   ExaminePreferenceKeys()
+  Declare   FlushPreferenceBuffers()
+  Declare   NextPreferenceGroup()
+  Declare   NextPreferenceKey()
+  Declare   OpenPreferences(Filename.s, Flags = 0)
+  
+  Declare   PreferenceComment(Text.s)
+  Declare   PreferenceGroup(Name.s)
+  
+  Declare.s PreferenceGroupName()
+  Declare.s PreferenceKeyName()
+  Declare.s PreferenceKeyValue()
+  
+  Declare.d ReadPreferenceDouble (Key.s, DefaultValue.d)
+  Declare.f ReadPreferenceFloat  (Key.s, DefaultValue.f)  
+  Declare.i ReadPreferenceInteger(Key.s, DefaultValue.i)
+  Declare.l ReadPreferenceLong   (Key.s, DefaultValue.l)
+  Declare.q ReadPreferenceQuad   (Key.s, DefaultValue.q)
+  Declare.s ReadPreferenceString (Key.s, DefaultValue.s)
+  
+  Declare   RemovePreferenceGroup(Group.s)
+  Declare   RemovePreferenceKey(Key.s)
+  
+  Declare   WritePreferenceDouble (Key.s, Value.d)
+  Declare   WritePreferenceFloat  (Key.s, Value.f)
+  Declare   WritePreferenceInteger(Key.s, Value.i)
+  Declare   WritePreferenceLong   (Key.s, Value.l)
+  Declare   WritePreferenceQuad   (Key.s, Value.q)
+  Declare   WritePreferenceString (Key.s, Value.s)
+  
+EndDeclareModule
+
+Module Preferences
+  
+  EnableExplicit
+  
+  Global FieldSeparator.s = Chr(1)
+  
+  Global CurrentFilename.s  = ""
+  Global CurrentGroupname.s = ""
+  Global CurrentKeyname.s   = ""
+  
+  ! preferences$groupArray = [];
+  ! preferences$groupCounter = -1;
+  ! preferences$keyArray = [];
+  ! preferences$keyCounter = -1;  
+  
+  ; ClosePreferences()
+  Procedure ClosePreferences()
+    CurrentFilename  = ""
+    CurrentGroupname = ""
+    CurrentKeyname = ""
+    ! preferences$groupArray = [];
+    ! preferences$groupCounter = -1;
+    ! preferences$keyArray = [];
+    ! preferences$keyCounter = -1;
+  EndProcedure
+  
+  ; Result = CreatePreferences(Filename$ [, Flags])  
+  Procedure CreatePreferences(Filename.s, Flags = 0)
+    ClosePreferences()
+    CurrentFilename = Filename
+    ProcedureReturn #True
+  EndProcedure
+  
+  ; Result = ExaminePreferenceGroups()
+  Procedure ExaminePreferenceGroups()
+    
+    ! preferences$groupArray = [];
+    ! preferences$groupCounter = -1;
+    
+    ! $.each(localStorage, function(key, value) {
+    !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
+    !     var groupname = key.split(preferences$v_fieldseparator)[1];
+    !     if (preferences$groupArray.indexOf(groupname) == -1) {
+    !       preferences$groupArray.push(groupname);
+    !     }
+    !   }
+    ! });
+    
+    ! return (preferences$groupArray.length > 0);
+    
+  EndProcedure
+  
+  ; Result = ExaminePreferenceKeys()
+  Procedure ExaminePreferenceKeys()
+    
+    ! preferences$keyArray = [];
+    ! preferences$keyCounter = -1;
+    
+    ! $.each(localStorage, function(key, value) {
+    !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
+    !     if (preferences$v_currentgroupname == key.split(preferences$v_fieldseparator)[1]) {
+    !       var keyname = key.split(preferences$v_fieldseparator)[2];
+    !       if (keyname) {
+    !         if (preferences$keyArray.indexOf(keyname) == -1) {
+    !           preferences$keyArray.push(keyname);
+    !         }
+    !       }
+    !     }
+    !   }
+    ! });
+    
+    ! return (preferences$keyArray.length > 0);
+    
+  EndProcedure
+  
+  ; FlushPreferenceBuffers()
+  Procedure FlushPreferenceBuffers()
+    ; dummy
+  EndProcedure
+  
+  ; Result = NextPreferenceGroup()
+  Procedure NextPreferenceGroup()
+    ! if (preferences$groupArray.length - 1 > preferences$groupCounter) {
+    !   preferences$groupCounter += 1;
+    !   preferences$v_currentgroupname = preferences$groupArray[preferences$groupCounter];
+    !   return true;
+    ! } else {
+    !   return false;
+    ! }    
+  EndProcedure
+  
+  ; Result = NextPreferenceKey()
+  Procedure NextPreferenceKey()
+    ! if (preferences$keyArray.length - 1 > preferences$keyCounter) {
+    !   preferences$keyCounter += 1;
+    !   preferences$v_currentkeyname = preferences$keyArray[preferences$keyCounter];
+    !   return true;
+    ! } else {
+    !   return false;
+    ! }
+  EndProcedure
+  
+  ; Result = OpenPreferences(Filename$ [, Flags])
+  Procedure OpenPreferences(Filename.s, Flags = 0)
+    ClosePreferences()
+    CurrentFilename = Filename
+    ProcedureReturn #True
+  EndProcedure
+  
+  ; PreferenceComment(Text$)
+  Procedure PreferenceComment(Text.s)
+    ; dummy
+  EndProcedure
+  
+  ; Result = PreferenceGroup(Name$)
+  Procedure PreferenceGroup(Name.s)
+    CurrentGroupname = Name
+    Protected Key.s = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + ""
+    ! localStorage.setItem(v_key, "");
+    ProcedureReturn #True
+  EndProcedure
+  
+  ; Group$ = PreferenceGroupName()
+  Procedure.s PreferenceGroupName()
+    ProcedureReturn CurrentGroupname
+  EndProcedure
+  
+  ; Key$ = PreferenceKeyName()
+  Procedure.s PreferenceKeyName()
+    ProcedureReturn CurrentKeyname
+  EndProcedure
+  
+  ; Value$ = PreferenceKeyValue()
+  Procedure.s PreferenceKeyValue()
+    Protected Key.s = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + CurrentKeyname
+    ! return localStorage.getItem(v_key);
+  EndProcedure
+  
+  ; Result.d = ReadPreferenceDouble(Key$, DefaultValue)
+  Procedure.d ReadPreferenceDouble(Key.s, DefaultValue.d)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; Result.f = ReadPreferenceFloat(Key$, DefaultValue)
+  Procedure.f ReadPreferenceFloat(Key.s, DefaultValue.f)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; Result = ReadPreferenceInteger(Key$, DefaultValue)
+  Procedure.i ReadPreferenceInteger(Key.s, DefaultValue.i)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; Result = ReadPreferenceLong(Key$, DefaultValue)
+  Procedure.l ReadPreferenceLong(Key.s, DefaultValue.l)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; Result.q = ReadPreferenceQuad(Key$, DefaultValue)
+  Procedure.q ReadPreferenceQuad(Key.s, DefaultValue.q)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; Result$ = ReadPreferenceString(Key$, DefaultValue$)
+  Procedure.s ReadPreferenceString(Key.s, DefaultValue.s)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! var value = localStorage.getItem(v_key);
+    ! if (!value) return v_defaultvalue;
+    ! return value;
+  EndProcedure
+  
+  ; RemovePreferenceGroup(Group$)
+  Procedure RemovePreferenceGroup(Group.s)
+    
+    ! var removeKeys = [];
+    
+    ! $.each(localStorage, function(key, value) {
+    !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
+    !     if (preferences$v_currentgroupname == key.split(preferences$v_fieldseparator)[1]) {
+    !       removeKeys.push(key);
+    !     }
+    !   }
+    ! });
+    
+    ! $.each(removeKeys, function(index, value) {
+    !   localStorage.removeItem(value);
+    ! });
+    
+  EndProcedure
+  
+  ; RemovePreferenceKey(Key$)
+  Procedure RemovePreferenceKey(Key.s)
+    
+    ! var removeKeys = [];
+    
+    ! $.each(localStorage, function(key, value) {
+    !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
+    !     if (preferences$v_currentgroupname == key.split(preferences$v_fieldseparator)[1]) {
+    !       if (v_key == key.split(preferences$v_fieldseparator)[2]) {
+    !       removeKeys.push(key);
+    !     }
+    !   }
+    ! });
+    
+    ! $.each(removeKeys, function(index, value) {
+    !   localStorage.removeItem(value);
+    ! });
+    
+  EndProcedure
+  
+  ; WritePreferenceDouble(Key$, Value.d)
+  Procedure WritePreferenceDouble(Key.s, Value.d)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+  ; WritePreferenceFloat(Key$, Value.f)
+  Procedure WritePreferenceFloat(Key.s, Value.f)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+  ; WritePreferenceInteger(Key$, Value)
+  Procedure WritePreferenceInteger(Key.s, Value.i)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+  ; WritePreferenceLong(Key$, Value)
+  Procedure WritePreferenceLong(Key.s, Value.l)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+  ; WritePreferenceQuad(Key$, Value.q)
+  Procedure WritePreferenceQuad(Key.s, Value.q)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+  ; WritePreferenceString(Key$, Value$)
+  Procedure WritePreferenceString(Key.s, Value.s)
+    Key = CurrentFilename + FieldSeparator + CurrentGroupname + FieldSeparator + Key
+    ! localStorage.setItem(v_key, v_value); 
+  EndProcedure
+  
+EndModule
