@@ -251,7 +251,8 @@ Module Preferences
     !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
     !     if (preferences$v_currentgroupname == key.split(preferences$v_fieldseparator)[1]) {
     !       if (v_key == key.split(preferences$v_fieldseparator)[2]) {
-    !       removeKeys.push(key);
+    !         removeKeys.push(key);
+    !       }
     !     }
     !   }
     ! });

@@ -45,6 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-Preferences.sbi.cfg
-PreferencesDemo.sb.cfg
+*.cfg
 spiderbasic.js
+SpiderBasic_Compilation0.html
