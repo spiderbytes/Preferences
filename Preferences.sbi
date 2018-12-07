@@ -222,7 +222,7 @@ Module Preferences
     ! if (!value) return v_defaultvalue;
     ! return value;
   EndProcedure
-  
+ 
   ; RemovePreferenceGroup(Group$)
   Procedure RemovePreferenceGroup(Group.s)
     
@@ -230,7 +230,7 @@ Module Preferences
     
     ! $.each(localStorage, function(key, value) {
     !   if (preferences$v_currentfilename == key.split(preferences$v_fieldseparator)[0]) {
-    !     if (preferences$v_currentgroupname == key.split(preferences$v_fieldseparator)[1]) {
+    !     if (v_group == key.split(preferences$v_fieldseparator)[1]) {
     !       removeKeys.push(key);
     !     }
     !   }
@@ -240,7 +240,7 @@ Module Preferences
     !   localStorage.removeItem(value);
     ! });
     
-  EndProcedure
+  EndProcedure 
   
   ; RemovePreferenceKey(Key$)
   Procedure RemovePreferenceKey(Key.s)
